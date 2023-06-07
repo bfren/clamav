@@ -24,7 +24,7 @@ ARG CLAMAV=1.1.0
 RUN FILE=clamav-${CLAMAV}.tar.gz && \
     wget https://www.clamav.net/downloads/production/${FILE} && \
     wget https://www.clamav.net/downloads/production/${FILE}.sig && \
-    pgp --verify ${FILE}.sig && \
+    gpg --verify ${FILE}.sig && \
     tar xzf ${FILE}
 
 # build clamav binary

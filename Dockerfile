@@ -4,7 +4,7 @@ ARG TALOS_KEY
 # use target Alpine version as host
 FROM alpine:${ALPINE} AS build
 
-# install prerequisites - see https://docs.clamav.net/manual/Installing/Installing-from-source-Unix.html#alpine
+# install prerequisites - see https://github.com/Cisco-Talos/clamav-docker
 RUN apk update && apk upgrade \
     && \
     apk add --no-cache \
@@ -49,7 +49,7 @@ RUN URI=https://www.clamav.net/downloads/production && \
     gpg --verify ${FILE}.sig && \
     tar xzf ${FILE}
 
-# build clamav binary
+# build and configure clamav - see https://github.com/Cisco-Talos/clamav-docker
 WORKDIR /tmp/clamav-${CLAMAV}
 RUN mkdir -p "./build" && cd "./build" && \
     cmake .. \

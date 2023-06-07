@@ -44,7 +44,7 @@ jobs:
             CLAMAV=${{ matrix.clamav }}
             TALOS_KEY=${{ steps.talos_key.outputs.contents }}
           push: true
-          platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64/v8
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           tags: |
             ghcr.io/bfren/clamav:${{ matrix.clamav }}
       -

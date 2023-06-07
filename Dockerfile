@@ -4,9 +4,7 @@ ARG ALPINE=3.18
 FROM alpine:${ALPINE} AS builder
 
 # install prerequisites - see https://github.com/Cisco-Talos/clamav-docker
-RUN apk update && apk upgrade \
-    && \
-    apk add --no-cache \
+RUN apk add --no-cache \
         bsd-compat-headers \
         cmake \
         file \
@@ -33,6 +31,8 @@ RUN apk update && apk upgrade \
         # For Rust/Cargo
         cargo \
         rust
+RUN apk add --no-cache \
+        gpg
     
 # import Talos PGP Public Key
 WORKDIR /tmp

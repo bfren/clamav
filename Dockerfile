@@ -17,7 +17,7 @@ RUN apk update && apk add \
 # import Talos PGP Public Key
 WORKDIR /tmp
 RUN wget https://raw.githubusercontent.com/bfren/clamav/main/talos-public-pgp-key && \
-    gpg --import /tmp/talos-public-pgp-key
+    gpg --import /tmp/talos-public-pgp-key || true
 
 # download clamav source
 ARG CLAMAV=1.1.0

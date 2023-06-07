@@ -1,8 +1,7 @@
 ARG ALPINE=3.18
-ARG TALOS_KEY
 
 # use target Alpine version as host
-FROM alpine:${ALPINE} AS build
+FROM alpine:${ALPINE} AS builder
 
 # install prerequisites - see https://github.com/Cisco-Talos/clamav-docker
 RUN apk update && apk upgrade \

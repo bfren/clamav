@@ -21,7 +21,7 @@ RUN echo "${TALOS_KEY}" > talos.key \
 
 # download clamav source
 ARG CLAMAV=1.1.0
-RUN FILE=clamav-${CLAMAV}.tar.gz
+RUN FILE=clamav-${CLAMAV}.tar.gz && \
     wget https://www.clamav.net/downloads/production/${FILE} && \
     wget https://www.clamav.net/downloads/production/${FILE}.sig && \
     pgp --verify ${FILE}.sig && \

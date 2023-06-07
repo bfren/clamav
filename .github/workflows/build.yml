@@ -16,13 +16,6 @@ jobs:
         name: Checkout repository
         uses: actions/checkout@v3
       -
-        name: Read Talos PGP key
-        uses: bfren/read-file@v2
-        with:
-          file: ./talos-public-pgp-key
-        id: talos_key
-
-      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       -
@@ -42,7 +35,6 @@ jobs:
         with:
           build-args: |
             CLAMAV=${{ matrix.clamav }}
-            TALOS_KEY=${{ steps.talos_key.outputs.contents }}
           push: true
           platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           tags: |

@@ -4,9 +4,9 @@ ARG ALPINE=3.18
 FROM alpine:${ALPINE} AS builder
 
 ARG CLAMAV=1.1.0
-ARG KEY_URI=https://raw.githubusercontent.com/bfren/clamav/main
-ARG KEY_FILE=talos-public-key
-ARG SRC_URI=https://www.clamav.net/downloads/production
+ARG KEY_URI=https://raw.githubusercontent.com/bfren/clamav/main \
+ARG KEY_FILE=talos-public-key \
+ARG SRC_URI=https://www.clamav.net/downloads/production \
 ARG SRC_FILE=clamav-${CLAMAV}.tar.gz
 
 # install prerequisites
@@ -52,8 +52,8 @@ RUN tar xzf ${SRC_FILE}
 
 # build and configure ClamAV
 WORKDIR /tmp/clamav-${CLAMAV}
-RUN mkdir "/clamav" && \
-    cmake -B /clamav \
+RUN mkdir build && \
+    cmake -B ./build \
         -D CMAKE_BUILD_TYPE="Release" \
         -D CMAKE_INSTALL_PREFIX="/usr" \
         -D CMAKE_INSTALL_LIBDIR="/usr/lib" \
@@ -67,8 +67,15 @@ RUN mkdir "/clamav" && \
         -D ENABLE_STATIC_LIB=OFF \
         -D ENABLE_SYSTEMD=OFF \
         -D ENABLE_JSON_SHARED=ON
-RUN cmake --build /clamav
-RUN ctest --test-dir /clamav --output-on-failure
+RUN cmake --build ./build
+RUN ctest --test-dir ./build --output-on-failure
+RUN DESTDIR="/clamav" cmake --install ./build
+
+# remove unnecessary directories
+WORKDIR /clamav
+RUN rm -r ./etc/clamav
+RUN rm -r ./usr/lib/pkgconfig
+RUN rm -r ./usr/share
 
 # copy compiled files to final image
 FROM scratch as final

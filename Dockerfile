@@ -38,7 +38,6 @@ WORKDIR /tmp
 RUN URI=https://www.clamav.net/downloads/production && \
     FILE=clamav-${CLAMAV}.tar.gz && \
     wget ${URI}/${FILE} && \
-    wget ${URI}/${FILE}.sig && \
     tar xzf ${FILE}
 
 # build and configure clamav - see https://github.com/Cisco-Talos/clamav-docker

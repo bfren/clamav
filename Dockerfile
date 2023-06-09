@@ -1,4 +1,5 @@
 ARG ALPINE=3.18
+ARG CLAMAV=1.1.0
 
 # use target Alpine version as host
 FROM alpine:${ALPINE} AS builder
@@ -39,7 +40,6 @@ RUN PGP_URI=https://raw.githubusercontent.com/bfren/clamav/main && \
     gpg --import ${PGP_FILE}-2023 ${PGP_FILE}-2025 || true
 
 # download ClamAV source and verify signature
-ARG CLAMAV=1.1.0
 RUN CLAMAV_URI=https://www.clamav.net/downloads/production && \
     FILE=clamav-${CLAMAV}.tar.gz && \
     wget ${CLAMAV_URI}/${FILE} && \

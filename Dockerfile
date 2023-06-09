@@ -49,23 +49,27 @@ RUN CLAMAV_URI=https://www.clamav.net/downloads/production && \
 
 # build and configure ClamAV
 WORKDIR /tmp/clamav-${CLAMAV}
-RUN mkdir -p "./build" && cd "./build" && \
-    cmake .. \
+RUN mkdir "/clamav" && \
+    cmake -B /clamav -G Ninja \
         -D CMAKE_BUILD_TYPE="Release" \
-        -D CMAKE_INSTALL_PREFIX="/usr" \
-        -D CMAKE_INSTALL_LIBDIR="/usr/lib" \
-        -D APP_CONFIG_DIRECTORY="/etc/clamav" \
-        -D DATABASE_DIRECTORY="/var/lib/clamav" \
-        -D ENABLE_CLAMONACC=OFF \
-        -D ENABLE_EXAMPLES=OFF \
-        -D ENABLE_MILTER=ON \
-        -D ENABLE_MAN_PAGES=OFF \
-        -D ENABLE_STATIC_LIB=OFF \
-        -D ENABLE_JSON_SHARED=ON \
+        -D CMAKE_INSTALL_PREFIX=/usr \
+	-D CMAKE_INSTALL_LIBDIR=/usr/lib \
+	-D CMAKE_SKIP_INSTALL_RPATH=ON \
+	-D APP_CONFIG_DIRECTORY=/etc/clamav \
+	-D DATABASE_DIRECTORY=/var/lib/clamav \
+	-D ENABLE_DOXYGEN=OFF \
+	-D ENABLE_SYSTEMD=OFF \
+	-D ENABLE_TESTS=ON \
+	-D ENABLE_CLAMONACC=ON \
+	-D ENABLE_MILTER=ON \
+	-D ENABLE_EXTERNAL_MSPACK=ON \
+	-D ENABLE_EXAMPLES=ON \
+	-D ENABLE_EXAMPLES_DEFAULT=ON \
+	-D HAVE_SYSTEM_LFS_FTS=ON \
+	-D ENABLE_JSON_SHARED=ON \
     && \
-    make DESTDIR="/clamav" -j$(($(nproc) - 1)) install && \
-    rm -r "/clamav/usr/lib/pkgconfig/" && \
-    ctest -V
+    cmake --build /clamav && \
+    ctest --test-dir /clamav --output-on-failure
 
 # copy compiled files to final image
 FROM scratch as final

@@ -4,9 +4,9 @@ ARG ALPINE=3.18
 FROM alpine:${ALPINE} AS builder
 
 ARG CLAMAV=1.1.0
-ARG KEY_URI=https://raw.githubusercontent.com/bfren/clamav/main \
-ARG KEY_FILE=talos-public-key \
-ARG SRC_URI=https://www.clamav.net/downloads/production \
+ARG KEY_URI=https://raw.githubusercontent.com/bfren/clamav/main
+ARG KEY_FILE=talos-public-key
+ARG SRC_URI=https://www.clamav.net/downloads/production
 ARG SRC_FILE=clamav-${CLAMAV}.tar.gz
 
 # install prerequisites

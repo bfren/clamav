@@ -31,16 +31,27 @@ RUN apk add --no-cache \
         # For Rust/Cargo
         cargo \
         rust
+RUN apk add --no-cache \
+        gpg
 
-# download clamav source
-ARG CLAMAV=1.1.0
+# import Talos PGP Public Keys
 WORKDIR /tmp
-RUN URI=https://www.clamav.net/downloads/production && \
+RUN PGP_URI=https://raw.githubusercontent.com/bfren/clamav/main && \
+    PGP_FILE=talos-public-pgp-key && \
+    wget ${PGP_URI}/${PGP_FILE}-2023 && \
+    wget ${PGP_URI}/${PGP_FILE}-2025 && \
+    gpg --import ${PGP_FILE}-2023 ${PGP_FILE}-2025 || true
+
+# download ClamAV source
+ARG CLAMAV=1.1.0
+RUN CLAMAV_URI=https://www.clamav.net/downloads/production && \
     FILE=clamav-${CLAMAV}.tar.gz && \
-    wget ${URI}/${FILE} && \
+    wget ${CLAMAV_URI}/${FILE} && \
+    wget ${CLAMAV_URI}/${FILE}.sig && \
+    gpg --verify -q ${FILE}.sig && \
     tar xzf ${FILE}
 
-# build and configure clamav - see https://github.com/Cisco-Talos/clamav-docker
+# build and configure ClamAV - see https://github.com/Cisco-Talos/clamav-docker
 WORKDIR /tmp/clamav-${CLAMAV}
 RUN mkdir -p "./build" && cd "./build" && \
     cmake .. \
